@@ -3,5 +3,20 @@
   "item.hellgauntletboss.the_corrupted_spawn_egg": "The Corrupted Spawn Egg",
   "item.hellgauntletboss.corrupted_core": "Corrupted Core",
   "effect.hellgauntletboss.corruption": "Corruption",
-  "itemGroup.hellgauntletboss": "Hell Gauntlet Bosses"
+  "itemGroup.hellgauntletboss": "Hell Gauntlet Bosses",
+  "item.hellgauntletboss.steel_ingot": "Steel Ingot",
+  "item.hellgauntletboss.steel_helmet": "Steel Knight Helmet",
+  "item.hellgauntletboss.steel_chestplate": "Steel Knight Chestplate",
+  "item.hellgauntletboss.steel_leggings": "Steel Knight Leggings",
+  "item.hellgauntletboss.steel_boots": "Steel Knight Boots",
+  "item.hellgauntletboss.corrupted_helmet": "Corrupted Knight Helmet",
+  "item.hellgauntletboss.corrupted_chestplate": "Corrupted Knight Chestplate",
+  "item.hellgauntletboss.corrupted_leggings": "Corrupted Knight Leggings",
+  "item.hellgauntletboss.corrupted_boots": "Corrupted Knight Boots",
+  "item.hellgauntletboss.corrupted_upgrade_smithing_template": "Corrupted Upgrade",
+  "item.hellgauntletboss.smithing_template.corrupted_upgrade.applies_to": "Steel Knight Armor",
+  "item.hellgauntletboss.smithing_template.corrupted_upgrade.ingredients": "Corrupted Core",
+  "item.hellgauntletboss.smithing_template.corrupted_upgrade.base_slot_description": "Add Steel Knight armor",
+  "item.hellgauntletboss.smithing_template.corrupted_upgrade.additions_slot_description": "Add Corrupted Core",
+  "upgrade.hellgauntletboss.corrupted_upgrade": "Corrupted Upgrade"
 }

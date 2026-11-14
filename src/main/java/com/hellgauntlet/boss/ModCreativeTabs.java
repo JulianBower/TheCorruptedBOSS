@@ -18,6 +18,16 @@ public final class ModCreativeTabs {
                     .displayItems((params, output) -> {
                         output.accept(ModItems.THE_CORRUPTED_SPAWN_EGG.get());
                         output.accept(ModItems.CORRUPTED_CORE.get());
+                        output.accept(ModItems.STEEL_INGOT.get());
+                        output.accept(ModItems.STEEL_HELMET.get());
+                        output.accept(ModItems.STEEL_CHESTPLATE.get());
+                        output.accept(ModItems.STEEL_LEGGINGS.get());
+                        output.accept(ModItems.STEEL_BOOTS.get());
+                        output.accept(ModItems.CORRUPTED_UPGRADE_TEMPLATE.get());
+                        output.accept(ModItems.CORRUPTED_HELMET.get());
+                        output.accept(ModItems.CORRUPTED_CHESTPLATE.get());
+                        output.accept(ModItems.CORRUPTED_LEGGINGS.get());
+                        output.accept(ModItems.CORRUPTED_BOOTS.get());
                     })
                     .build());
 

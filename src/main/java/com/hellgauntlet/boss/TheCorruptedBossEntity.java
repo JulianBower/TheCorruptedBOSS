@@ -572,6 +572,8 @@ public class TheCorruptedBossEntity extends Monster {
                 ExperienceOrb.award(serverLevel, this.position(), DEATH_XP);
                 // always exactly one core, dropped when the boss is defeated (6th orb explosion)
                 this.spawnAtLocation(new net.minecraft.world.item.ItemStack(ModItems.CORRUPTED_CORE.get()));
+                // 4-7 steel ingots alongside the core
+                this.spawnAtLocation(new net.minecraft.world.item.ItemStack(ModItems.STEEL_INGOT.get(), 4 + this.random.nextInt(4)));
             }
         }
     }

@@ -16,6 +16,7 @@ public class TheCorruptedMod {
         ModItems.ITEMS.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
         ModParticles.PARTICLES.register(modBus);
+        ModArmorMaterials.ARMOR_MATERIALS.register(modBus);
 
         modBus.addListener(TheCorruptedMod::onAttributes);
 

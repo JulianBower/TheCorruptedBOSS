@@ -122,6 +122,20 @@ def paint(variant):
                     if vis==2: c=hexc('FF5A4A'); g=hexc('FF5A4A')
                     elif vis==1: c=RED_B; g=RED_B
                     elif is_cape is False and False: pass
+                if g is None and alpha and not vis:
+                    k={'up':1.14,'down':0.66,'north':0.96,'south':0.84,'east':1.0,'west':0.9}[q['face']]
+                    k*=1.10-0.26*min(max(fv,0),1)              # light from above: top of each plate brighter
+                    k*=0.80+0.025*min(max(pb[1],0),8)            # lower body sits in shadow
+                    k*=0.96+0.08*hash3(py,q['ci'],q['face'].__len__(),1)   # brushed horizontal grain
+                    if min(ex,ey)==1 and (px>=x1-2 or py>=y1-2): k*=0.88       # contact shadow along bottom/right
+                    if min(ex,ey)==1 and (px<=x0+1 or py<=y0+1): k*=1.07       # bevel light on top/left
+                    if w>=10 and h>=10 and px-x0 in (2,w-3) and py-y0 in (2,h-3): k*=1.45   # rivets
+                    elif w>=10 and h>=10 and px-x0 in (3,w-2) and py-y0 in (3,h-2): k*=0.72 # rivet shadow
+                    if vnoise(pb,2.2,60)>0.72: k*=0.84                           # grime
+                    if hash3(px,py,q['ci'],77)<0.012: k*=1.35                     # scratches
+                    c=c*k
+                    if variant=='awakened' and right and vnoise(pb,4.0,70)>0.74: c=c+np.array([16,10,18])   # glassy obsidian facets
+                    if variant=='awakened' and right and vnoise(pb,3.0,80)>0.78: c=c+np.array([30,4,4])     # faint red subsurface glow
                 img[py,px]=(*np.clip(c,0,255).astype(np.uint8),alpha)
                 if g is not None and alpha: glow[py,px]=(*np.clip(g,0,255).astype(np.uint8),255)
     return Image.fromarray(img,'RGBA'),Image.fromarray(glow,'RGBA')

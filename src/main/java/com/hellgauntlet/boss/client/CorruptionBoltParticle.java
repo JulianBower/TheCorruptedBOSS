@@ -21,14 +21,14 @@ public class CorruptionBoltParticle extends TextureSheetParticle {
     protected CorruptionBoltParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz, SpriteSet sprites) {
         super(level, x, y, z, 0.0, 0.0, 0.0);
         this.pickSprite(sprites);
-        this.lifetime = 4 + this.random.nextInt(5);
+        this.lifetime = 6 + this.random.nextInt(5);
         this.gravity = 0.0F;
         this.hasPhysics = false;
         this.xd = dx;
         this.yd = dy;
         this.zd = dz;
         this.seed = this.random.nextLong();
-        this.length = 0.5 + this.random.nextDouble() * 0.9;
+        this.length = 1.4 + this.random.nextDouble() * 1.4;
     }
 
     @Override
@@ -67,13 +67,14 @@ public class CorruptionBoltParticle extends TextureSheetParticle {
         float u = (this.getU0() + this.getU1()) * 0.5F;
         float v = (this.getV0() + this.getV1()) * 0.5F;
         for (int i = 0; i < segments; i++) {
-            ribbon(buffer, pts[i], pts[i + 1], 0.05F, 217, 30, 24, (int) (140 * fade), u, v);
-            ribbon(buffer, pts[i], pts[i + 1], 0.016F, 255, 96, 84, (int) (255 * fade), u, v);
+            ribbon(buffer, pts[i], pts[i + 1], 0.16F, 217, 30, 24, (int) (200 * fade), u, v);
+            ribbon(buffer, pts[i], pts[i + 1], 0.055F, 255, 110, 100, (int) (255 * fade), u, v);
         }
     }
 
     private static void ribbon(VertexConsumer vc, Vec3 a, Vec3 b, float width, int r, int g, int bl, int alpha, float u, float v) {
-        Vec3 side = b.subtract(a).cross(a.add(b).scale(0.5)).normalize().scale(width);
+        Vec3 side = b.subtract(a).cross(a.add(b).scale(0.5));
+        side = (side.lengthSqr() < 1.0E-8 ? new Vec3(0.0, 1.0, 0.0) : side.normalize()).scale(width);
         quad(vc, a.add(side), b.add(side), b.subtract(side), a.subtract(side), r, g, bl, alpha, u, v);
     }
 
