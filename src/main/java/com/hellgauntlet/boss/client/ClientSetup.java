@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import com.hellgauntlet.boss.ModItems;
 import com.hellgauntlet.boss.ModParticles;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.neoforged.neoforge.client.event.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 @EventBusSubscriber(modid = TheCorruptedMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientSetup {

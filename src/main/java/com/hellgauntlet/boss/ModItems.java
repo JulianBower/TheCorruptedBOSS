@@ -54,7 +54,7 @@ public final class ModItems {
                 corrupted));
     }
 
-    private static Component text(String prefix, String key) {
+    private static MutableComponent text(String prefix, String suffix) {
         return Component.translatable(Util.makeDescriptionId(prefix, ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, key)));
     }
 
