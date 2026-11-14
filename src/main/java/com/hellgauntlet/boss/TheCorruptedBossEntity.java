@@ -545,6 +545,7 @@ public class TheCorruptedBossEntity extends Monster {
         BossCombat.sound(this, SoundEvents.WITHER_SPAWN, 4.0F, 0.75F);
         BossCombat.sound(this, SoundEvents.LIGHTNING_BOLT_THUNDER, 3.0F, 0.6F);
         this.burstTicks = BURST_TICKS;
+        BossCombat.fx(this, 4, this.position(), Vec3.ZERO);
         if (this.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.EXPLOSION_EMITTER, this.getX(), this.getY() + 1.5, this.getZ(),
                     2, 1.0, 1.0, 1.0, 0.0);

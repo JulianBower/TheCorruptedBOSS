@@ -32,6 +32,14 @@ public final class BossCombat {
 
     private BossCombat() {}
 
+    /** Tells every client tracking `source` to draw the red lightning of an attack (see CorruptionAttackFxPayload). */
+    public static void fx(Entity source, int attackType, Vec3 origin, Vec3 direction) {
+        if (!source.level().isClientSide()) {
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayersTrackingEntity(source,
+                    new CorruptionAttackFxPayload(attackType, origin.x, origin.y, origin.z, direction.x, direction.y, direction.z));
+        }
+    }
+
     // ---------------------------------------------------------------- sound
 
     public static void sound(Entity source, SoundEvent sound, float volume, float pitch) {

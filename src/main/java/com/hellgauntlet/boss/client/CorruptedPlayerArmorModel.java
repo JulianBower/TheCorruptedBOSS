@@ -39,28 +39,57 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
     @Override
     public void renderToBuffer(PoseStack ps, VertexConsumer vc, int light, int overlay, int color) {
         switch (this.slot) {
-            case HEAD -> part(ps, this.head, ArmorMesh.HEAD.D, vc, light, overlay, color);
+            case HEAD -> {
+                ps.pushPose();
+                this.head.translateAndRotate(ps);
+                box(ps, vc, -4.5F, -8.5F, -4.5F, 4.5F, 0.5F, 4.5F, ArmorMesh.UV_HEAD, light, overlay, color);
+                draw(ArmorMesh.HEAD.D, ps, vc, light, overlay, color);
+                ps.popPose();
+            }
             case CHEST -> {
                 ps.pushPose();
                 this.body.translateAndRotate(ps);
+                box(ps, vc, -4.5F, -0.5F, -2.5F, 4.5F, 7.0F, 2.5F, ArmorMesh.UV_BODY, light, overlay, color);
                 draw(ArmorMesh.CHEST.D, ps, vc, light, overlay, color);
                 cape(ps, vc, light, overlay, color);
                 ps.popPose();
-                part(ps, this.rightArm, ArmorMesh.R_ARM.D, vc, light, overlay, color);
-                part(ps, this.leftArm, ArmorMesh.L_ARM.D, vc, light, overlay, color);
+                sleeve(ps, this.rightArm, -3.6F, 1.6F, ArmorMesh.R_ARM.D, vc, light, overlay, color);
+                sleeve(ps, this.leftArm, -1.6F, 3.6F, ArmorMesh.L_ARM.D, vc, light, overlay, color);
             }
             case LEGS -> {
-                part(ps, this.body, ArmorMesh.BODY_LOW.D, vc, light, overlay, color);
-                part(ps, this.rightLeg, ArmorMesh.R_LEG_UP.D, vc, light, overlay, color);
-                part(ps, this.leftLeg, ArmorMesh.L_LEG_UP.D, vc, light, overlay, color);
+                ps.pushPose();
+                this.body.translateAndRotate(ps);
+                box(ps, vc, -4.7F, 6.6F, -2.7F, 4.7F, 12.5F, 2.7F, ArmorMesh.UV_BODY, light, overlay, color);
+                draw(ArmorMesh.BODY_LOW.D, ps, vc, light, overlay, color);
+                ps.popPose();
+                legPiece(ps, this.rightLeg, -0.5F, 7.0F, ArmorMesh.R_LEG_UP.D, vc, light, overlay, color);
+                legPiece(ps, this.leftLeg, -0.5F, 7.0F, ArmorMesh.L_LEG_UP.D, vc, light, overlay, color);
             }
             case FEET -> {
-                part(ps, this.rightLeg, ArmorMesh.R_LEG_LOW.D, vc, light, overlay, color);
-                part(ps, this.leftLeg, ArmorMesh.L_LEG_LOW.D, vc, light, overlay, color);
+                legPiece(ps, this.rightLeg, 7.0F, 12.7F, ArmorMesh.R_LEG_LOW.D, vc, light, overlay, color);
+                legPiece(ps, this.leftLeg, 7.0F, 12.7F, ArmorMesh.L_LEG_LOW.D, vc, light, overlay, color);
             }
             default -> {
             }
         }
+    }
+
+    /** Arm armor: solid sleeve slightly larger than the vanilla arm, then the boss plates on top. */
+    private static void sleeve(PoseStack ps, ModelPart arm, float x0, float x1, float[] quads, VertexConsumer vc, int light, int overlay, int color) {
+        ps.pushPose();
+        arm.translateAndRotate(ps);
+        box(ps, vc, x0, -2.6F, -2.6F, x1, 10.6F, 2.6F, ArmorMesh.UV_ARM, light, overlay, color);
+        draw(quads, ps, vc, light, overlay, color);
+        ps.popPose();
+    }
+
+    /** Leg armor between y0 and y1 (part space): solid shell larger than the vanilla leg, then the boss plates. */
+    private static void legPiece(PoseStack ps, ModelPart leg, float y0, float y1, float[] quads, VertexConsumer vc, int light, int overlay, int color) {
+        ps.pushPose();
+        leg.translateAndRotate(ps);
+        box(ps, vc, -2.7F, y0, -2.7F, 2.7F, y1, 2.7F, ArmorMesh.UV_LEG, light, overlay, color);
+        draw(quads, ps, vc, light, overlay, color);
+        ps.popPose();
     }
 
     private static void part(PoseStack ps, ModelPart part, float[] quads, VertexConsumer vc, int light, int overlay, int color) {

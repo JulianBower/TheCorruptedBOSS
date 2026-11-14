@@ -1,5 +1,6 @@
 package com.hellgauntlet.boss.client;
 
+import com.hellgauntlet.boss.ClientFxState;
 import com.hellgauntlet.boss.ModEffects;
 import com.hellgauntlet.boss.TheCorruptedMod;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -49,7 +50,8 @@ public final class CorruptionLightningRenderer {
                 continue;
             }
             MobEffectInstance effect = living.getEffect(ModEffects.CORRUPTION);
-            if (effect == null) {
+            // mobs do not get their effects synced by vanilla: ClientFxState is filled by CorruptionSyncPayload
+            if (effect == null && !ClientFxState.isCorrupted(living.getId(), level.getGameTime())) {
                 continue;
             }
             if (entity == mc.getCameraEntity() && mc.options.getCameraType().isFirstPerson()) {
@@ -67,7 +69,7 @@ public final class CorruptionLightningRenderer {
             poseStack.pushPose();
             poseStack.translate(x, y, z);
             BossVoidFx.bodyBolts(consumer, poseStack.last(), living.getBbWidth(), living.getBbHeight(),
-                    living.getId(), living.tickCount, effect.getAmplifier());
+                    living.getId(), living.tickCount, effect == null ? 0 : effect.getAmplifier());
             poseStack.popPose();
         }
         if (consumer != null) {

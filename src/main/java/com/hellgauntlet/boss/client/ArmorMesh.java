@@ -343,6 +343,14 @@ final class ArmorMesh {
         -0.4879F,6.156F,-0.9068F,0.4844F,0F,-0.4756F,6.156F,-2.3068F,0.4922F,0F,-0.4756F,8.748F,-2.3068F,0.4922F,0.0117F,-0.4879F,8.748F,-0.9068F,0.4844F,0.0117F,-1F,0F,-0.0087F,
     }; }
 
+    /** Plain plate area used for the solid under-layer that covers the whole player part. */
+    static final float[] UV_ARM = { 0.2391F, 0.168F, 0.2531F, 0.2031F };
+    /** Plain plate area used for the solid under-layer that covers the whole player part. */
+    static final float[] UV_BODY = { 0.0094F, 0.0133F, 0.0375F, 0.0531F };
+    /** Plain plate area used for the solid under-layer that covers the whole player part. */
+    static final float[] UV_HEAD = { 0.0082F, 0.0887F, 0.0328F, 0.1203F };
+    /** Plain plate area used for the solid under-layer that covers the whole player part. */
+    static final float[] UV_LEG = { 0.0672F, 0.1992F, 0.0813F, 0.2344F };
     /** Cape uv (back face of the boss tassets): u0, v0, u1, v1. */
     static final float[] CAPE_UV = { 0.2666F, 0.1729F, 0.3076F, 0.1963F };
 }

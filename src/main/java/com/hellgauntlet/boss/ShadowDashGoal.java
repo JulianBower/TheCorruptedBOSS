@@ -112,6 +112,7 @@ public class ShadowDashGoal extends Goal {
                     this.state = State.DASH;
                     this.timer = 0;
                     BossCombat.sound(this.boss, SoundEvents.WARDEN_SONIC_BOOM, 1.2F, 1.6F);
+                    BossCombat.fx(this.boss, 3, this.boss.position(), new Vec3(this.dirX * 12.0, 0.0, this.dirZ * 12.0));
                 }
             }
             case DASH -> {
@@ -174,6 +175,7 @@ public class ShadowDashGoal extends Goal {
         double pz = this.boss.getZ() + this.dirZ * 2.4;
         BossCombat.sound(this.boss, SoundEvents.WARDEN_ATTACK_IMPACT, 1.6F, connected ? 0.7F : 0.9F);
         BossCombat.sound(this.boss, SoundEvents.IRON_GOLEM_ATTACK, 1.2F, 0.5F);
+        BossCombat.fx(this.boss, 3, new Vec3(px, py, pz), new Vec3(this.dirX * 0.1, 0.0, this.dirZ * 0.1));
         level.sendParticles(ParticleTypes.EXPLOSION, px, py, pz, 1, 0.0, 0.0, 0.0, 0.0);
         level.sendParticles(BossCombat.CRIMSON, px, py + 0.5, pz, 18, 0.6, 0.8, 0.6, 0.05);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, px, py, pz, 8, 0.5, 0.6, 0.5, 0.05);

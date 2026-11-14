@@ -116,6 +116,7 @@ public class HeavyComboGoal extends Goal {
             level.sendParticles(ParticleTypes.SWEEP_ATTACK, px, py, pz, 1, 0.0, 0.0, 0.0, 0.0);
             level.sendParticles(BossCombat.CRIMSON, px, py, pz, 10, 0.5, 0.4, 0.5, 0.0);
             if (finisher) {
+                BossCombat.fx(this.boss, 3, new Vec3(px, py, pz), new Vec3(aim.x * 0.1, 0.0, aim.z * 0.1));
                 level.sendParticles(ParticleTypes.EXPLOSION, px, py - 0.5, pz, 1, 0.0, 0.0, 0.0, 0.0);
             }
         }

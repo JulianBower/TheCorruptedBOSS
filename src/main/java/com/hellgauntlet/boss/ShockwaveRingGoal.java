@@ -99,6 +99,9 @@ public class ShockwaveRingGoal extends Goal {
         if (this.tick <= WINDUP_TICKS) {
             this.windup(level);
         } else if (this.tick - WINDUP_TICKS <= RING_TICKS) {
+            if (this.tick == WINDUP_TICKS + 1) {
+                BossCombat.fx(this.boss, 1, new Vec3(this.cx, this.cy, this.cz), Vec3.ZERO);
+            }
             this.ring(level, this.tick - WINDUP_TICKS);
         }
     }

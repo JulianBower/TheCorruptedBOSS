@@ -137,6 +137,7 @@ public class VoidRuptureGoal extends Goal {
         double fx = this.startX();
         double fz = this.startZ();
         double fy = BossCombat.surfaceY(level, fx, this.boss.getY(), fz);
+        BossCombat.fx(this.boss, 2, new Vec3(fx, fy, fz), new Vec3(this.dirX, 0.0, this.dirZ));
         BossCombat.sound(this.boss, SoundEvents.WARDEN_ATTACK_IMPACT, 1.5F, 0.6F);
         BossCombat.sound(this.boss, SoundEvents.LIGHTNING_BOLT_IMPACT, 1.0F, 1.4F);
         level.sendParticles(ParticleTypes.EXPLOSION, fx, fy + 0.3, fz, 1, 0.0, 0.0, 0.0, 0.0);

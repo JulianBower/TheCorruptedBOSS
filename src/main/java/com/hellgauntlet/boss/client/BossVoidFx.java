@@ -121,6 +121,21 @@ public final class BossVoidFx {
         }
     }
 
+    /** Jagged path between two points (VoidFx lightning math), for attack effects. */
+    public static List<Vec3> jaggedPath(RandomSource rnd, Vec3 a, Vec3 b, int segments, double jitterFactor) {
+        return jagged(rnd, a, b, segments, jitterFactor);
+    }
+
+    /** Red (255, 30, 35) lightning strike along `pts`: wide glow plus a hot core; fade 0..1. */
+    public static void strike(VertexConsumer vc, PoseStack.Pose pose, List<Vec3> pts, float scale, float fade) {
+        polyline(vc, pose, pts, 0.07F * scale, 255, 30, 35, (int) (150 * fade));
+        polyline(vc, pose, pts, 0.022F * scale, 255, 130, 125, (int) (255 * fade));
+    }
+
+    public static Vec3 randomUnit(RandomSource rnd) {
+        return randomDir(rnd);
+    }
+
     private static void bolt(VertexConsumer vc, PoseStack.Pose pose, List<Vec3> pts, float scale) {
         polyline(vc, pose, pts, 0.05F * scale, 217, 30, 24, 110);
         polyline(vc, pose, pts, 0.016F * scale, 255, 96, 84, 255);
