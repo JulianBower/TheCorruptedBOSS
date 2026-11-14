@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -54,7 +55,7 @@ public final class ModItems {
                 corrupted));
     }
 
-    private static MutableComponent text(String prefix, String suffix) {
+    private static MutableComponent text(String prefix, String key) {
         return Component.translatable(Util.makeDescriptionId(prefix, ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, key)));
     }
 
