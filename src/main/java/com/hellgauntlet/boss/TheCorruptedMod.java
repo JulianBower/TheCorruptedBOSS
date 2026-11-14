@@ -15,6 +15,7 @@ public class TheCorruptedMod {
         ModEntities.ENTITY_TYPES.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
+        ModParticles.PARTICLES.register(modBus);
 
         modBus.addListener(TheCorruptedMod::onAttributes);
 

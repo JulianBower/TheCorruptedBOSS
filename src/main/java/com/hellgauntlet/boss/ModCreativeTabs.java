@@ -15,7 +15,10 @@ public final class ModCreativeTabs {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + TheCorruptedMod.MODID))
                     .icon(() -> new ItemStack(ModItems.THE_CORRUPTED_SPAWN_EGG.get()))
-                    .displayItems((params, output) -> output.accept(ModItems.THE_CORRUPTED_SPAWN_EGG.get()))
+                    .displayItems((params, output) -> {
+                        output.accept(ModItems.THE_CORRUPTED_SPAWN_EGG.get());
+                        output.accept(ModItems.CORRUPTED_CORE.get());
+                    })
                     .build());
 
     private ModCreativeTabs() {}

@@ -50,9 +50,9 @@ public class TheCorruptedBossEntity extends Monster {
     public static final float OVERLOAD_DAMAGE = 50.0F;
     public static final int STUN_TICKS = 60;
 
-    public static final int ORB_INTERVAL_TICKS = 240;       // ~12 seconds between orb charges
-    public static final int ORB_CHARGE_TICKS = 80;
-    public static final int ORB_CHARGE_TICKS_PHASE_TWO = 65;
+    public static final int ORB_INTERVAL_TICKS = 700;       // ~35 seconds between orb charges
+    public static final int ORB_CHARGE_TICKS = 45;
+    public static final int ORB_CHARGE_TICKS_PHASE_TWO = 35;
     public static final double KILL_WAVE_RADIUS = 35.0;
     public static final int OVERLOAD_BLAST_RADIUS = 6;
 
@@ -85,8 +85,8 @@ public class TheCorruptedBossEntity extends Monster {
     private static final ResourceLocation PHASE_TWO_SPEED =
             ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, "phase_two_speed");
 
-    private static final int INITIAL_ORB_DELAY = 160;
-    private static final int ABORTED_ORB_DELAY = 100;
+    private static final int INITIAL_ORB_DELAY = 400;
+    private static final int ABORTED_ORB_DELAY = 400;
     private static final int QUEUE_STALL_LIMIT = 100;
     private static final int CLANG_COOLDOWN_TICKS = 4;
     private static final int BURST_TICKS = 12;
@@ -570,6 +570,8 @@ public class TheCorruptedBossEntity extends Monster {
             this.bossEvent.setProgress(0.0F);
             if (this.level() instanceof ServerLevel serverLevel) {
                 ExperienceOrb.award(serverLevel, this.position(), DEATH_XP);
+                // always exactly one core, dropped when the boss is defeated (6th orb explosion)
+                this.spawnAtLocation(new net.minecraft.world.item.ItemStack(ModItems.CORRUPTED_CORE.get()));
             }
         }
     }

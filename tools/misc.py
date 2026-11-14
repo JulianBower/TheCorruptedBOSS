@@ -30,7 +30,7 @@ for i,e in enumerate(gj['elements']):
                     tex[y,x]=(217,30,24,255); gl[y,x]=(255,59,48,255)
         cs=np.array([gpt(c) for c in face_corners(f,t,fn)])
         GQ.append(dict(bb=cs,uv=[u1/16,v1/16,u2/16,v2/16],nbb=np.array(NORM[fn],float)))
-Image.fromarray(tex,'RGBA').save('out/gauntlet.png'); Image.fromarray(gl,'RGBA').save('out/gauntlet_glow.png')
+pass  # gauntlet.png is the user's hand-painted 32x32 texture (tools/gauntlet.png) - not regenerated
 # ---------- effect icon 18x18
 ic=np.zeros((18,18,4),np.uint8)
 for y in range(18):

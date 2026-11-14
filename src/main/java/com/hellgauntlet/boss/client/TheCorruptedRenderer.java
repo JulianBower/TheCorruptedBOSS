@@ -32,6 +32,8 @@ public class TheCorruptedRenderer extends MobRenderer<TheCorruptedBossEntity, Th
     private static final ResourceLocation GAUNTLET = tex("gauntlet");
     private static final ResourceLocation GAUNTLET_GLOW = tex("gauntlet_glow");
     private static final ResourceLocation VOID_SPHERE = tex("void_sphere");
+    private static final ResourceLocation BOLT =
+            ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, "textures/effect/corruption_bolt.png");
 
     public TheCorruptedRenderer(EntityRendererProvider.Context context) {
         super(context, new TheCorruptedModel(), 1.1F);
@@ -62,6 +64,11 @@ public class TheCorruptedRenderer extends MobRenderer<TheCorruptedBossEntity, Th
     public void render(TheCorruptedBossEntity boss, float yaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource buffer, int light) {
         super.render(boss, yaw, partialTick, poseStack, buffer, light);
+        if (boss.isPhaseTwo() && !boss.isDeadOrDying()) {
+            // phase 2: the boss carries the Corruption lightning himself
+            BossVoidFx.bodyBolts(buffer.getBuffer(RenderType.entityTranslucentEmissive(BOLT)), poseStack.last(),
+                    1.9F, boss.getBbHeight(), boss.getId(), boss.tickCount, 2);
+        }
         if (boss.isCharging() && !boss.isDeadOrDying()) {
             renderOrb(boss, partialTick, poseStack, buffer);
         }

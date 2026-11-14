@@ -9,7 +9,7 @@ import java.util.EnumSet;
 
 /**
  * Insta-Kill Void Orb Charge. He raises his right arm, locks his gaze on the target and charges the orb for
- * 80 ticks (65 in phase 2). If it finishes, the 35-block shockwave kills every survival player in range.
+ * 45 ticks (35 in phase 2). If it finishes, the 35-block shockwave kills every survival player in range.
  * If a player's arrow crosses the orb first, it detonates in his hand instead (self-overload, stun, ORB_HITS++).
  */
 public class VoidOrbChargeGoal extends Goal {

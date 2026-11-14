@@ -156,7 +156,7 @@ public class VoidRuptureGoal extends Goal {
             for (double h = 0.2; h <= 2.7; h += 0.5) {
                 level.sendParticles(BossCombat.CRIMSON, x, y + h, z, 1, 0.25, 0.1, 0.25, 0.0);
             }
-            level.sendParticles(ParticleTypes.CRIMSON_SPORE, x, y + 0.3, z, 3, 0.4, 0.2, 0.4, 0.1);
+            level.sendParticles(BossCombat.CRIMSON, x, y + 0.3, z, 3, 0.4, 0.2, 0.4, 0.1);
             level.sendParticles(ParticleTypes.LARGE_SMOKE, x, y + 0.4, z, 1, 0.3, 0.2, 0.3, 0.05);
             if (((int) (d * 2.0)) % 2 == 0) {
                 BossCombat.redBolt(level, x, y, z, 3.0);

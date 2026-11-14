@@ -1,6 +1,7 @@
 {
   "entity.hellgauntletboss.the_corrupted": "The Corrupted",
   "item.hellgauntletboss.the_corrupted_spawn_egg": "The Corrupted Spawn Egg",
+  "item.hellgauntletboss.corrupted_core": "Corrupted Core",
   "effect.hellgauntletboss.corruption": "Corruption",
   "itemGroup.hellgauntletboss": "Hell Gauntlet Bosses"
 }

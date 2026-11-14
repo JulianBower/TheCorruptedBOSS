@@ -3,6 +3,7 @@ package com.hellgauntlet.boss;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -25,7 +26,8 @@ import java.util.List;
 
 /** Shared helpers for the boss attacks: damage, Corruption, knockback, ground checks and particle effects. */
 public final class BossCombat {
-    public static final DustParticleOptions CRIMSON = new DustParticleOptions(new Vector3f(0.85F, 0.12F, 0.09F), 1.5F);
+    /** Red lightning bolt particle (client draws a jagged bolt, same look as the Corruption effect). */
+    public static final ParticleOptions CRIMSON = ModParticles.CORRUPTION_BOLT.get();
     public static final DustParticleOptions SHADOW = new DustParticleOptions(new Vector3f(0.04F, 0.0F, 0.02F), 2.0F);
 
     private BossCombat() {}
