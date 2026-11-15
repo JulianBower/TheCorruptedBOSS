@@ -9,7 +9,10 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import com.hellgauntlet.boss.ModItems;
 import com.hellgauntlet.boss.ModParticles;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
 @EventBusSubscriber(modid = TheCorruptedMod.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -33,12 +36,21 @@ public final class ClientSetup {
                 ModItems.CORRUPTED_HELMET.get(), ModItems.CORRUPTED_CHESTPLATE.get(), ModItems.CORRUPTED_LEGGINGS.get(), ModItems.CORRUPTED_BOOTS.get());
     }
 
+    /** Boss-textured 3D knight armor on players and on every other humanoid-model mob (zombies, skeletons, ...). */
     @SubscribeEvent
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             Object renderer = event.getSkin(skin);
             if (renderer instanceof PlayerRenderer player) {
-                player.addLayer(new CorruptedGlowLayer(player));
+                player.addLayer(new KnightArmorLayer<>(player));
+            }
+        }
+        for (EntityType<?> type : event.getEntityTypes()) {
+            Object renderer = event.getRenderer((EntityType) type);
+            if (renderer instanceof LivingEntityRenderer living && !(renderer instanceof PlayerRenderer)
+                    && living.getModel() instanceof HumanoidModel) {
+                living.addLayer(new KnightArmorLayer(living));
             }
         }
     }

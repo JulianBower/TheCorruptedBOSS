@@ -17,7 +17,7 @@ public final class ModArmorMaterials {
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS =
             DeferredRegister.create(Registries.ARMOR_MATERIAL, TheCorruptedMod.MODID);
 
-    /** 3/8/6/3 = 20 armor, toughness 3, knockback resistance 0.1 (durability multiplier 28 is set on the items). */
+    /** Enchantability 15 (accepts table and anvil enchants). 3/8/6/3 = 20 armor, toughness 3, knockback resistance 0.1 (durability multiplier 28 is set on the items). */
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> STEEL = ARMOR_MATERIALS.register("steel",
             () -> new ArmorMaterial(
                     Util.make(new EnumMap<>(ArmorItem.Type.class), m -> {
@@ -31,7 +31,7 @@ public final class ModArmorMaterials {
                     List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, "steel"))),
                     3.0F, 0.1F));
 
-    /** 4/9/7/4 = 24 armor, toughness 3.5, knockback resistance 0.15 (durability multiplier 45 is set on the items). */
+    /** Enchantability 18 (accepts table and anvil enchants). 4/9/7/4 = 24 armor, toughness 3.5, knockback resistance 0.15 (durability multiplier 45 is set on the items). */
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> CORRUPTED = ARMOR_MATERIALS.register("corrupted",
             () -> new ArmorMaterial(
                     Util.make(new EnumMap<>(ArmorItem.Type.class), m -> {
@@ -41,7 +41,7 @@ public final class ModArmorMaterials {
                         m.put(ArmorItem.Type.HELMET, 4);
                         m.put(ArmorItem.Type.BODY, 13);
                     }),
-                    20, SoundEvents.ARMOR_EQUIP_NETHERITE, () -> Ingredient.of(ModItems.CORRUPTED_CORE.get()),
+                    18, SoundEvents.ARMOR_EQUIP_NETHERITE, () -> Ingredient.of(ModItems.CORRUPTED_CORE.get()),
                     List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(TheCorruptedMod.MODID, "corrupted"))),
                     3.5F, 0.15F));
 

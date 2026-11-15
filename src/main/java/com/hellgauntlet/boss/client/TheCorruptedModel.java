@@ -2,6 +2,7 @@ package com.hellgauntlet.boss.client;
 
 import com.hellgauntlet.boss.TheCorruptedBossEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
@@ -17,6 +18,9 @@ import org.joml.Quaternionf;
  */
 public class TheCorruptedModel extends EntityModel<TheCorruptedBossEntity> {
     private static final int STRIDE = 23;
+    /** Centre of the gauntlet quads in arm-local model pixels (x -1..1.2, y 0.515..3.65). */
+    private static final float GAUNTLET_CENTER_X = 0.1F;
+    private static final float GAUNTLET_CENTER_Y = 2.0825F;
 
     /** Rotation (radians) and offset (model pixels) of one bone. */
     private static final class Bone {
@@ -152,6 +156,12 @@ public class TheCorruptedModel extends EntityModel<TheCorruptedBossEntity> {
         poseStack.pushPose();
         place(poseStack, torso, null);
         place(poseStack, rightArm, torso);
+        // The baked gauntlet quads come out upside down on the arm: turn them 180 degrees around the forearm
+        // (roll about Z keeps the knuckle plate facing forward) and pivot on the gauntlet's own centre, which is
+        // also the Y offset that keeps it wrapped around the forearm and hand instead of sliding off.
+        poseStack.translate(GAUNTLET_CENTER_X / 16.0F, GAUNTLET_CENTER_Y / 16.0F, 0.0F);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
+        poseStack.translate(-GAUNTLET_CENTER_X / 16.0F, -GAUNTLET_CENTER_Y / 16.0F, 0.0F);
         draw(CorruptedMesh.GAUNTLET.D, poseStack, consumer, light, overlay, color);
         poseStack.popPose();
     }

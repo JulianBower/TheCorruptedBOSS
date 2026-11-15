@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -19,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Wearable armor in the silhouette of The Corrupted: T-visor knight helmet, layered pauldrons, plated arms and legs,
- * and a tattered cape on the chestplate. The geometry is the boss model baked to player proportions (ArmorMesh);
- * one instance exists per armor slot and draws only that slot's quads, following the vanilla humanoid part poses.
+ * Wearable armor that is the boss: T-visor knight helmet with brow/cheek plates, thick pauldrons, chestplate, waist
+ * tassets, knee guards, and the tattered cape. The geometry is TheCorruptedModel's cubes baked to full player scale
+ * (ArmorMesh, tools/gen_armor.py) on top of player-sized under-layer cubes. One instance exists per armor slot and
+ * draws only that slot's quads, following the vanilla humanoid part poses. It is textured by KnightArmorLayer with the
+ * boss atlas (the_corrupted_normal / _awakened + _glow), never with a flat vanilla armor texture.
  */
 public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
     private static final int STRIDE = 23;
@@ -29,20 +30,16 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
     /** Entity being rendered, set by the item extension right before rendering (drives the cape). */
     public LivingEntity entity;
 
-    private final ModelPart cHead, cHat, cBody, cRightArm, cLeftArm, cRightPauldron, cLeftPauldron,
-            cRightLeg, cLeftLeg, cRightBoot, cLeftBoot;
+    private final ModelPart cHead, cBody, cRightArm, cLeftArm, cRightLeg, cLeftLeg, cRightBoot, cLeftBoot;
 
     public CorruptedPlayerArmorModel(EquipmentSlot slot) {
         super(emptyRoot());
         this.slot = slot;
         ModelPart root = cubes().bakeRoot();
         this.cHead = root.getChild("c_head");
-        this.cHat = root.getChild("c_hat");
         this.cBody = root.getChild("c_body");
         this.cRightArm = root.getChild("c_right_arm");
         this.cLeftArm = root.getChild("c_left_arm");
-        this.cRightPauldron = root.getChild("c_right_pauldron");
-        this.cLeftPauldron = root.getChild("c_left_pauldron");
         this.cRightLeg = root.getChild("c_right_leg");
         this.cLeftLeg = root.getChild("c_left_leg");
         this.cRightBoot = root.getChild("c_right_boot");
@@ -62,7 +59,6 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
         switch (this.slot) {
             case HEAD -> {
                 solid(this.cHead, this.head, ps, vc, light, overlay, color);
-                solid(this.cHat, this.head, ps, vc, light, overlay, color);   // outer plate with the T-visor
                 part(ps, this.head, ArmorMesh.HEAD.D, vc, light, overlay, color);
             }
             case CHEST -> {
@@ -74,8 +70,6 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
                 ps.popPose();
                 solid(this.cRightArm, this.rightArm, ps, vc, light, overlay, color);
                 solid(this.cLeftArm, this.leftArm, ps, vc, light, overlay, color);
-                solid(this.cRightPauldron, this.rightArm, ps, vc, light, overlay, color);
-                solid(this.cLeftPauldron, this.leftArm, ps, vc, light, overlay, color);
                 part(ps, this.rightArm, ArmorMesh.R_ARM.D, vc, light, overlay, color);
                 part(ps, this.leftArm, ArmorMesh.L_ARM.D, vc, light, overlay, color);
             }
@@ -103,32 +97,30 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
         cube.render(ps, vc, light, overlay, color);
     }
 
+    /**
+     * Under-layer cubes at player scale; they hide every pixel of skin. The boss plates (ArmorMesh: brow and cheek
+     * plates, pauldrons, tassets, knee guards) stand proud of them. Texture patches sit in the unused corner of the
+     * 512x512 boss atlas (the_corrupted_normal / _awakened, see tools/paint.py).
+     */
     private static LayerDefinition cubes() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        // texture patches live in the unused part of the 512x512 boss atlas (see tools/paint.py)
         root.addOrReplaceChild("c_head", CubeListBuilder.create().texOffs(320, 0)
-                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.95F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_hat", CubeListBuilder.create().texOffs(320, 16)
-                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.25F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_body", CubeListBuilder.create().texOffs(320, 32)
-                .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_right_arm", CubeListBuilder.create().texOffs(320, 48)
-                .addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.75F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_left_arm", CubeListBuilder.create().texOffs(320, 48)
-                .addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.75F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_right_pauldron", CubeListBuilder.create().texOffs(320, 64)
-                .addBox(-3.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(1.1F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_left_pauldron", CubeListBuilder.create().texOffs(320, 64)
-                .addBox(-1.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(1.1F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_right_leg", CubeListBuilder.create().texOffs(352, 48)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.5F, 4.0F, new CubeDeformation(0.65F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_left_leg", CubeListBuilder.create().texOffs(352, 48)
-                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.5F, 4.0F, new CubeDeformation(0.65F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_right_boot", CubeListBuilder.create().texOffs(352, 64)
-                .addBox(-2.0F, 8.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
-        root.addOrReplaceChild("c_left_boot", CubeListBuilder.create().texOffs(352, 64)
-                .addBox(-2.0F, 8.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
+                .addBox(-4.5F, -8.5F, -4.5F, 9.0F, 9.0F, 9.0F), PartPose.ZERO);
+        root.addOrReplaceChild("c_body", CubeListBuilder.create().texOffs(320, 20)
+                .addBox(-4.5F, 0.0F, -2.5F, 9.0F, 12.0F, 5.0F), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_arm", CubeListBuilder.create().texOffs(320, 40)
+                .addBox(-3.4F, -2.4F, -2.4F, 4.8F, 12.8F, 4.8F), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_arm", CubeListBuilder.create().texOffs(320, 40)
+                .addBox(-1.4F, -2.4F, -2.4F, 4.8F, 12.8F, 4.8F), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_leg", CubeListBuilder.create().texOffs(320, 60)
+                .addBox(-2.3F, 0.0F, -2.3F, 4.6F, 12.0F, 4.6F), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_leg", CubeListBuilder.create().texOffs(320, 60)
+                .addBox(-2.3F, 0.0F, -2.3F, 4.6F, 12.0F, 4.6F), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_boot", CubeListBuilder.create().texOffs(320, 80)
+                .addBox(-2.4F, 8.0F, -2.4F, 4.8F, 4.0F, 4.8F), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_boot", CubeListBuilder.create().texOffs(320, 80)
+                .addBox(-2.4F, 8.0F, -2.4F, 4.8F, 4.0F, 4.8F), PartPose.ZERO);
         return LayerDefinition.create(mesh, 512, 512);
     }
 
@@ -147,11 +139,11 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
                     + Mth.sin(this.entity.tickCount * 0.1F) * 0.03F + (this.entity.isCrouching() ? 0.3F : 0.0F);
         }
         ps.pushPose();
-        ps.translate(0.0F, 1.0F / 16.0F, 2.4F / 16.0F);
+        ps.translate(0.0F, 1.0F / 16.0F, 3.0F / 16.0F);
         ps.mulPose(com.mojang.math.Axis.XP.rotation(angle));
         float[] uv = ArmorMesh.CAPE_UV;
         // two layers (outside / inside) so it is visible from both sides
-        box(ps, vc, -4.4F, 0.0F, 0.0F, 4.4F, 16.0F, 0.7F, uv, light, overlay, color);
+        box(ps, vc, -4.6F, 0.0F, 0.0F, 4.6F, 16.0F, 0.7F, uv, light, overlay, color);
         ps.popPose();
     }
 
