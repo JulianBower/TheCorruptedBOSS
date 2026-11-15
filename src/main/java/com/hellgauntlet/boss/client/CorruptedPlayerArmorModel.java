@@ -4,6 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,9 +29,24 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
     /** Entity being rendered, set by the item extension right before rendering (drives the cape). */
     public LivingEntity entity;
 
+    private final ModelPart cHead, cHat, cBody, cRightArm, cLeftArm, cRightPauldron, cLeftPauldron,
+            cRightLeg, cLeftLeg, cRightBoot, cLeftBoot;
+
     public CorruptedPlayerArmorModel(EquipmentSlot slot) {
         super(emptyRoot());
         this.slot = slot;
+        ModelPart root = cubes().bakeRoot();
+        this.cHead = root.getChild("c_head");
+        this.cHat = root.getChild("c_hat");
+        this.cBody = root.getChild("c_body");
+        this.cRightArm = root.getChild("c_right_arm");
+        this.cLeftArm = root.getChild("c_left_arm");
+        this.cRightPauldron = root.getChild("c_right_pauldron");
+        this.cLeftPauldron = root.getChild("c_left_pauldron");
+        this.cRightLeg = root.getChild("c_right_leg");
+        this.cLeftLeg = root.getChild("c_left_leg");
+        this.cRightBoot = root.getChild("c_right_boot");
+        this.cLeftBoot = root.getChild("c_left_boot");
     }
 
     private static ModelPart emptyRoot() {
@@ -40,56 +61,75 @@ public class CorruptedPlayerArmorModel extends HumanoidModel<LivingEntity> {
     public void renderToBuffer(PoseStack ps, VertexConsumer vc, int light, int overlay, int color) {
         switch (this.slot) {
             case HEAD -> {
-                ps.pushPose();
-                this.head.translateAndRotate(ps);
-                box(ps, vc, -4.5F, -8.5F, -4.5F, 4.5F, 0.5F, 4.5F, ArmorMesh.UV_HEAD, light, overlay, color);
-                draw(ArmorMesh.HEAD.D, ps, vc, light, overlay, color);
-                ps.popPose();
+                solid(this.cHead, this.head, ps, vc, light, overlay, color);
+                solid(this.cHat, this.head, ps, vc, light, overlay, color);   // outer plate with the T-visor
+                part(ps, this.head, ArmorMesh.HEAD.D, vc, light, overlay, color);
             }
             case CHEST -> {
+                solid(this.cBody, this.body, ps, vc, light, overlay, color);
                 ps.pushPose();
                 this.body.translateAndRotate(ps);
-                box(ps, vc, -4.5F, -0.5F, -2.5F, 4.5F, 7.0F, 2.5F, ArmorMesh.UV_BODY, light, overlay, color);
                 draw(ArmorMesh.CHEST.D, ps, vc, light, overlay, color);
                 cape(ps, vc, light, overlay, color);
                 ps.popPose();
-                sleeve(ps, this.rightArm, -3.6F, 1.6F, ArmorMesh.R_ARM.D, vc, light, overlay, color);
-                sleeve(ps, this.leftArm, -1.6F, 3.6F, ArmorMesh.L_ARM.D, vc, light, overlay, color);
+                solid(this.cRightArm, this.rightArm, ps, vc, light, overlay, color);
+                solid(this.cLeftArm, this.leftArm, ps, vc, light, overlay, color);
+                solid(this.cRightPauldron, this.rightArm, ps, vc, light, overlay, color);
+                solid(this.cLeftPauldron, this.leftArm, ps, vc, light, overlay, color);
+                part(ps, this.rightArm, ArmorMesh.R_ARM.D, vc, light, overlay, color);
+                part(ps, this.leftArm, ArmorMesh.L_ARM.D, vc, light, overlay, color);
             }
             case LEGS -> {
-                ps.pushPose();
-                this.body.translateAndRotate(ps);
-                box(ps, vc, -4.7F, 6.6F, -2.7F, 4.7F, 12.5F, 2.7F, ArmorMesh.UV_BODY, light, overlay, color);
-                draw(ArmorMesh.BODY_LOW.D, ps, vc, light, overlay, color);
-                ps.popPose();
-                legPiece(ps, this.rightLeg, -0.5F, 7.0F, ArmorMesh.R_LEG_UP.D, vc, light, overlay, color);
-                legPiece(ps, this.leftLeg, -0.5F, 7.0F, ArmorMesh.L_LEG_UP.D, vc, light, overlay, color);
+                part(ps, this.body, ArmorMesh.BODY_LOW.D, vc, light, overlay, color);
+                solid(this.cRightLeg, this.rightLeg, ps, vc, light, overlay, color);
+                solid(this.cLeftLeg, this.leftLeg, ps, vc, light, overlay, color);
+                part(ps, this.rightLeg, ArmorMesh.R_LEG_UP.D, vc, light, overlay, color);
+                part(ps, this.leftLeg, ArmorMesh.L_LEG_UP.D, vc, light, overlay, color);
             }
             case FEET -> {
-                legPiece(ps, this.rightLeg, 7.0F, 12.7F, ArmorMesh.R_LEG_LOW.D, vc, light, overlay, color);
-                legPiece(ps, this.leftLeg, 7.0F, 12.7F, ArmorMesh.L_LEG_LOW.D, vc, light, overlay, color);
+                solid(this.cRightBoot, this.rightLeg, ps, vc, light, overlay, color);
+                solid(this.cLeftBoot, this.leftLeg, ps, vc, light, overlay, color);
+                part(ps, this.rightLeg, ArmorMesh.R_LEG_LOW.D, vc, light, overlay, color);
+                part(ps, this.leftLeg, ArmorMesh.L_LEG_LOW.D, vc, light, overlay, color);
             }
             default -> {
             }
         }
     }
 
-    /** Arm armor: solid sleeve slightly larger than the vanilla arm, then the boss plates on top. */
-    private static void sleeve(PoseStack ps, ModelPart arm, float x0, float x1, float[] quads, VertexConsumer vc, int light, int overlay, int color) {
-        ps.pushPose();
-        arm.translateAndRotate(ps);
-        box(ps, vc, x0, -2.6F, -2.6F, x1, 10.6F, 2.6F, ArmorMesh.UV_ARM, light, overlay, color);
-        draw(quads, ps, vc, light, overlay, color);
-        ps.popPose();
+    /** Renders a real cube (full player-part size plus deformation) at the pose of the vanilla part. */
+    private static void solid(ModelPart cube, ModelPart pose, PoseStack ps, VertexConsumer vc, int light, int overlay, int color) {
+        cube.copyFrom(pose);
+        cube.render(ps, vc, light, overlay, color);
     }
 
-    /** Leg armor between y0 and y1 (part space): solid shell larger than the vanilla leg, then the boss plates. */
-    private static void legPiece(PoseStack ps, ModelPart leg, float y0, float y1, float[] quads, VertexConsumer vc, int light, int overlay, int color) {
-        ps.pushPose();
-        leg.translateAndRotate(ps);
-        box(ps, vc, -2.7F, y0, -2.7F, 2.7F, y1, 2.7F, ArmorMesh.UV_LEG, light, overlay, color);
-        draw(quads, ps, vc, light, overlay, color);
-        ps.popPose();
+    private static LayerDefinition cubes() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        // texture patches live in the unused part of the 512x512 boss atlas (see tools/paint.py)
+        root.addOrReplaceChild("c_head", CubeListBuilder.create().texOffs(320, 0)
+                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.95F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_hat", CubeListBuilder.create().texOffs(320, 16)
+                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.25F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_body", CubeListBuilder.create().texOffs(320, 32)
+                .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_arm", CubeListBuilder.create().texOffs(320, 48)
+                .addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.75F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_arm", CubeListBuilder.create().texOffs(320, 48)
+                .addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.75F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_pauldron", CubeListBuilder.create().texOffs(320, 64)
+                .addBox(-3.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(1.1F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_pauldron", CubeListBuilder.create().texOffs(320, 64)
+                .addBox(-1.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(1.1F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_leg", CubeListBuilder.create().texOffs(352, 48)
+                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.5F, 4.0F, new CubeDeformation(0.65F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_leg", CubeListBuilder.create().texOffs(352, 48)
+                .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.5F, 4.0F, new CubeDeformation(0.65F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_right_boot", CubeListBuilder.create().texOffs(352, 64)
+                .addBox(-2.0F, 8.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
+        root.addOrReplaceChild("c_left_boot", CubeListBuilder.create().texOffs(352, 64)
+                .addBox(-2.0F, 8.0F, -2.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.85F)), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 512, 512);
     }
 
     private static void part(PoseStack ps, ModelPart part, float[] quads, VertexConsumer vc, int light, int overlay, int color) {
