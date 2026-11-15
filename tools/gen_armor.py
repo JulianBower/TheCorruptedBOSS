@@ -2,8 +2,9 @@
 import numpy as np, os
 from PIL import Image
 from common import *
-S=2.8; LEG_S=3.24; HEAD_S=2.0
-PP={'R_ARM':(-5,2,0),'L_ARM':(5,2,0),'TORSO':(0,0,0),'R_LEG':(-1.9,12,0),'L_LEG':(1.9,12,0)}
+S=2.8; LEG_S=3.24; HEAD_S=2.45   # vertical scales (kept) and head scale (boss head ~9.4 px wide on the player)
+TXZ=3.14; LXZ=3.6                 # horizontal scale of torso/arms and legs: plates stand proud of the 9x12x5 body cube
+PP={'R_ARM':(-5*TXZ/S,2,0),'L_ARM':(5*TXZ/S,2,0),'TORSO':(0,0,0),'R_LEG':(-1.9*LXZ/S,12,0),'L_LEG':(1.9*LXZ/S,12,0)}
 hp=bb2m(np.array(PIVOT_BB['HEAD']))
 def fmt(v):
     s=('%.4f'%v).rstrip('0').rstrip('.'); return (s if s not in('','-0') else '0')+'F'
@@ -12,7 +13,8 @@ def mapq(q):
     if b=='HEAD': p=HEAD_S*(m-hp)
     else:
         sy=LEG_S if b.endswith('LEG') else S
-        p=np.stack([S*m[:,0],12+sy*(m[:,1]-20.3),S*m[:,2]],1)-np.array(PP[b])
+        sx=LXZ if b.endswith('LEG') else TXZ
+        p=np.stack([sx*m[:,0],12+sy*(m[:,1]-20.3),sx*m[:,2]],1)-np.array(PP[b])
     n=nbb2m(q['nbb']); n=n/(np.linalg.norm(n) or 1)
     u1,v1,u2,v2=[c/TEX for c in q['uv']]
     uv=[(u1,v1),(u2,v1),(u2,v2),(u1,v2)]

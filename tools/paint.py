@@ -50,7 +50,9 @@ def in_visor(pb,nbb):
 
 def shade(c,k): return np.clip(c*k,0,255)
 
-PATCHES=[(320,0,32,16),(320,16,32,16),(320,32,24,16),(320,48,16,16),(320,64,16,8),(352,48,16,16),(352,64,16,8)]
+# under-layer cubes of CorruptedPlayerArmorModel: head 9x9x9, body 9x12x5, arm 4.8x12.8x4.8, leg 4.6x12x4.6, boot 4.8x4x4.8
+PATCHES=[(320,0,36,18),(320,20,28,17),(320,40,20,18),(320,60,19,17),(320,80,20,9)]
+OLD_PATCHES=[(320,0,32,16),(320,16,32,16),(320,32,24,16),(320,48,16,16),(320,64,16,8),(352,48,16,16),(352,64,16,8)]
 def patches(img,glow,variant):
     """Plain plate patches for the real armor cubes (unused corner of the 512x512 atlas)."""
     for (x0,y0,w,h) in PATCHES:
@@ -69,12 +71,6 @@ def patches(img,glow,variant):
                     if obs and hash3(x,y,11,2)<0.1:
                         c=RED; glow[y,x]=(*RED.astype(np.uint8),255)
                 img[y,x]=(*np.clip(c,0,255).astype(np.uint8),255)
-    # T-visor on the front face of the outer helmet cube (hat box at 320,16 -> front face at 328,24, 8x8)
-    for (vx,vy) in [(x,y) for x in range(1,7) for y in (2,3)]+[(x,y) for x in (3,4) for y in range(4,8)]:
-        px,py=328+vx,24+vy
-        if variant=='normal': img[py,px]=(*VISOR_D.astype(np.uint8),255)
-        else:
-            img[py,px]=(*RED_B.astype(np.uint8),255); glow[py,px]=(*RED_B.astype(np.uint8),255)
 
 def paint(variant):
     """variant: 'normal' | 'awakened'. returns (color RGBA image, glow RGBA image)"""
