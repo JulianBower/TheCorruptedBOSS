@@ -10,5 +10,8 @@ Spawn: `/summon hellgauntletboss:the_corrupted` or the spawn egg in the "The Cor
 
 ## Knight armor
 Steel / Corrupted Knight armor is enchantable (enchantability 15 / 18; all 8 pieces are in the `minecraft:enchantable/*` item tags).
-Worn pieces are drawn by `KnightArmorLayer` with the boss atlas (`the_corrupted_normal`, or `the_corrupted_awakened` + `the_corrupted_glow`);
-the vanilla `*_layer_1/2.png` armor textures are 1x1 transparent on purpose (they only carry the glint). Regenerate the armor mesh with `tools/gen_armor.py`.
+Worn pieces use the boss atlas through `KnightArmorItem#getArmorTexture` (`the_corrupted_normal` for Steel, `the_corrupted_awakened` for Corrupted; there are no `*_layer_N.png` files), and `KnightArmorLayer` adds the full-bright `the_corrupted_glow` pass on Corrupted pieces. Regenerate the armor mesh with `tools/gen_armor.py`.
+
+## Little Demon and enchantments
+`little_demon` is a Nether trader (spawns rarely in nether_wastes, crimson_forest, basalt_deltas via `neoforge/biome_modifier`) selling 4-5 of the 7 custom enchanted books for gold ingots, blaze rods, netherite scraps or steel ingots.
+Enchantments are data-driven (`data/hellgauntletboss/enchantment`); effects are in `BossEnchantments`. The Hellgauntlet ones apply to `hellgauntlet:gauntlet_of_hell` through `tags/item/enchantable/hellgauntlet.json`. Texture script: `tools/paint_demon.py <outdir>`.
